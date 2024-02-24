@@ -5,22 +5,26 @@ const Debit = require("../models/Debit.ts");
 const Credit = require("../models/Credit.ts");
 const APIFeatures = require("../Utils/APIFeatures");
 
-export const getAllDebits = catchAsync(async (req: Request, res: Response) => {
-  const Features = new APIFeatures(Debit.find(), req.query)
-    .sort()
-    .fields()
-    .filter()
-    .paginate();
+export const getAllDebits = catchAsync(
+  async (req: Request | any, res: Response) => {
+    let filter = { user: req.user._id };
 
-  const credit = await Features.query;
+    const Features = new APIFeatures(Debit.find({ filter }), req.query)
+      .sort()
+      .fields()
+      .filter()
+      .paginate();
 
-  res.json({
-    message: "Debit transactions retrieved successfully",
-    data: {
-      credit,
-    },
-  });
-});
+    const debit = await Features.query;
+
+    res.json({
+      message: "Debit transactions retrieved successfully",
+      data: {
+        debit,
+      },
+    });
+  }
+);
 
 export const getOneDebit = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -48,6 +52,8 @@ export const createDebitTransaction = catchAsync(
       transactionID: generateTransactionId(),
     });
 
+    await createDebitFeeTransaction(debitTransaction.user);
+
     await Credit.create({
       user: debitTransaction.user,
       toUser: debitTransaction.toUser,
@@ -63,3 +69,11 @@ export const createDebitTransaction = catchAsync(
     });
   }
 );
+
+async function createDebitFeeTransaction(userId: string) {
+  return await Debit.create({
+    user: userId,
+    amount: 10,
+    transactionID: generateTransactionId(),
+  });
+}

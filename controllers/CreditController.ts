@@ -1,26 +1,56 @@
+import mongoose from "mongoose";
 import { successResponseHandler } from "../Utils/ResponseHandler";
 import { NextFunction, Request, Response } from "express";
 const catchAsync = require("../Utils/CatchAsync");
 const Credit = require("../models/Credit.ts");
 const APIFeatures = require("../Utils/APIFeatures");
+const Debit = require("../models/Debit.ts");
 
-export const getAllCredits = catchAsync(async (req: Request, res: Response) => {
-  console.log(req);
-  const Features = new APIFeatures(Credit.find(), req.query)
-    .sort()
-    .fields()
-    .filter()
-    .paginate();
+export const getAllCredits = catchAsync(
+  async (req: Request | any, res: Response) => {
+    let filter = { user: req.user._id };
 
-  const credit = await Features.query;
+    const Features = new APIFeatures(Credit.find(filter), req.query)
+      .sort()
+      .fields()
+      .filter()
+      .paginate();
 
-  res.json({
-    message: "Credit transactions retrieved successfully",
-    data: {
-      credit,
-    },
-  });
-});
+    const credit = await Features.query;
+
+    res.json({
+      message: "Credit transactions retrieved successfully",
+      data: {
+        credit,
+      },
+    });
+  }
+);
+
+export const getUserBalance = catchAsync(
+  async (req: Request | any, res: Response) => {
+    const userId = req.user._id;
+
+    const debitTotal = await Debit.aggregate([
+      { $match: { user: userId } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    const creditTotal = await Credit.aggregate([
+      { $match: { user: userId } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    const balance = (creditTotal[0]?.total || 0) - (debitTotal[0]?.total || 0);
+
+    res.json({
+      message: "Balance retrieved succcessfully",
+      data: {
+        balance,
+      },
+    });
+  }
+);
 
 export const getOneCredit = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

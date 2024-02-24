@@ -1,7 +1,5 @@
 import mongoose, { Model } from "mongoose";
 import { IDebitInterface } from "../types/DebitType";
-import { generateTransactionId } from "../Utils/Helper";
-const Credit = require("../models/Credit.ts");
 
 const debitSchema = new mongoose.Schema<IDebitInterface>(
   {
@@ -29,23 +27,15 @@ const debitSchema = new mongoose.Schema<IDebitInterface>(
   }
 );
 
-debitSchema.post<IDebitInterface>("save", async function (next) {
-  // Debit.create({
-  //   user: this.user,
-  //   amount: 10,
-  //   transactionID: this.transactionID,
-  // });
+// debitSchema.pre<IDebitInterface>("save", async function (next) {
+//   await Debit.create({
+//     user: this.user,
+//     amount: 10,
+//     transactionID: this.transactionID,
+//   });
 
-  // now we are crediting someone
-  // Credit.create({
-  //   user: this.user,
-  //   toUser: this.toUser,
-  //   amount: this.amount,
-  //   transactionID: generateTransactionId(),
-  // });
-
-  // next();
-});
+//   next();
+// });
 
 const Debit: Model<IDebitInterface> = mongoose.model<IDebitInterface>(
   "Debit",

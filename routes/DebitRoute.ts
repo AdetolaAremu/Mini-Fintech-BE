@@ -4,7 +4,7 @@ const authController = require("../controllers/AuthController");
 
 const router = express.Router();
 
-router.get("/", debitController.getAllDebits);
+router.get("/", authController.privateRoute, debitController.getAllDebits);
 
 router.post(
   "/",
