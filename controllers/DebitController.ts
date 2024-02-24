@@ -1,8 +1,8 @@
 import { generateTransactionId } from "../Utils/Helper";
-import { successResponseHandler } from "../Utils/ResponseHandler";
 import { NextFunction, Request, Response } from "express";
 const catchAsync = require("../Utils/catchAsync");
 const Debit = require("../models/Debit.ts");
+const Credit = require("../models/Credit.ts");
 const APIFeatures = require("../Utils/APIFeatures");
 
 export const getAllDebits = catchAsync(async (req: Request, res: Response) => {
