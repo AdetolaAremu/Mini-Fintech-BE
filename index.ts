@@ -41,7 +41,6 @@ app.use("*", (req: any, res: any, next: any) => {
   );
 });
 
-// global error handler for every request
 app.use(globalErrorHandler);
 
 module.exports = app;
