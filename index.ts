@@ -1,6 +1,5 @@
 // import { Application } from "express";
 const appExpress = require("express");
-const { Application } = require("express");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -11,7 +10,7 @@ const authRouter = require("./routes/AuthRoute");
 const debitRouter = require("./routes/DebitRoute");
 const creditRouter = require("./routes/CreditRoute");
 
-const app: typeof Application = express();
+const app = express();
 
 const ApplicationError = require("./Utils/AppError");
 const globalErrorHandler = require("./controllers/globalErrorHandler");
