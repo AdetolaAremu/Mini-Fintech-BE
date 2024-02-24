@@ -1,6 +1,6 @@
 import { generateTransactionId } from "../Utils/Helper";
 import { NextFunction, Request, Response } from "express";
-const catchAsync = require("../Utils/catchAsync");
+const catchAsync = require("../Utils/CatchAsync");
 const Debit = require("../models/Debit.ts");
 const Credit = require("../models/Credit.ts");
 const APIFeatures = require("../Utils/APIFeatures");

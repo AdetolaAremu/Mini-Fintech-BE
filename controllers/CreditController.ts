@@ -1,6 +1,6 @@
 import { successResponseHandler } from "../Utils/ResponseHandler";
 import { NextFunction, Request, Response } from "express";
-const catchAsync = require("../Utils/catchAsync");
+const catchAsync = require("../Utils/CatchAsync");
 const Credit = require("../models/Credit.ts");
 const APIFeatures = require("../Utils/APIFeatures");
 
