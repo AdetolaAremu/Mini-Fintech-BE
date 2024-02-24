@@ -6,8 +6,10 @@ import xss from "xss-clean";
 const authRouter = require("./routes/AuthRoute");
 const debitRouter = require("./routes/DebitRoute");
 const creditRouter = require("./routes/CreditRoute");
+const cors = require("cors");
 
 const app: Application = express();
+app.use(cors);
 
 const AppError = require("./Utils/AppError");
 const globalErrorHandler = require("./controllers/globalErrorHandler");
