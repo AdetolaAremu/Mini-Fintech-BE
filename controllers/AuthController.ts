@@ -2,7 +2,7 @@ import { generateTransactionId } from "../Utils/Helper";
 import { NextFunction, Request, Response } from "express";
 import { promisify } from "util";
 const jwt = require("jsonwebtoken");
-const catchAsync = require("../Utils/catchAsync");
+const catchAsync = require("../Utils/CatchAsync");
 const User = require("../models/User");
 const Credit = require("../models/Credit");
 const AppError = require("../Utils/AppError");
