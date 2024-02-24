@@ -9,7 +9,7 @@ const creditRouter = require("./routes/CreditRoute");
 const cors = require("cors");
 
 const app: Application = express();
-app.use(cors);
+app.use(cors({ credentials: true, origin: true }));
 
 const AppError = require("./Utils/AppError");
 const globalErrorHandler = require("./controllers/globalErrorHandler");
