@@ -1,6 +1,7 @@
 import mongoose, { Model } from "mongoose";
 import { IDebitInterface } from "../types/DebitType";
-const TransactionFee = require("../models/TransactionFee.ts");
+import { generateTransactionId } from "../Utils/Helper";
+const Credit = require("../models/Credit.ts");
 
 const debitSchema = new mongoose.Schema<IDebitInterface>(
   {
@@ -9,11 +10,12 @@ const debitSchema = new mongoose.Schema<IDebitInterface>(
       ref: "User",
       required: [true, "Debit has to belong to a user"],
     },
-    amount: {
-      type: Number,
-      default: 0,
+    toUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      // required: [true, "Receiving user is required"],
     },
-    balanceAfterDebit: {
+    amount: {
       type: Number,
       default: 0,
     },
@@ -27,14 +29,22 @@ const debitSchema = new mongoose.Schema<IDebitInterface>(
   }
 );
 
-debitSchema.pre<IDebitInterface>("save", async function (next) {
-  await TransactionFee.create({
-    user: this.user,
-    amount: 50,
-    transactionID: this.transactionID,
-  });
+debitSchema.post<IDebitInterface>("save", async function (next) {
+  // Debit.create({
+  //   user: this.user,
+  //   amount: 10,
+  //   transactionID: this.transactionID,
+  // });
 
-  next();
+  // now we are crediting someone
+  // Credit.create({
+  //   user: this.user,
+  //   toUser: this.toUser,
+  //   amount: this.amount,
+  //   transactionID: generateTransactionId(),
+  // });
+
+  // next();
 });
 
 const Debit: Model<IDebitInterface> = mongoose.model<IDebitInterface>(

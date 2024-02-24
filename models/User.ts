@@ -48,9 +48,23 @@ const userSchema = new mongoose.Schema<IUserInterface>(
 userSchema.pre<IUserInterface>("save", async function (next) {
   if (!this.isModified("password")) return next();
 
-  this.password = await bcrypt.hash(this.password);
+  try {
+    // Generate a salt
+    const salt = await bcrypt.genSalt(10); // 10 is the default number of salt rounds
 
-  this.confirmPassword = undefined;
+    // Hash the password with the salt
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+
+    // Assign the hashed password back to the user object
+    this.password = hashedPassword;
+
+    console.log(this.password);
+
+    this.confirmPassword = undefined;
+    next();
+  } catch (error: any) {
+    next(error);
+  }
 });
 
 userSchema.methods.correctPassword = async function (

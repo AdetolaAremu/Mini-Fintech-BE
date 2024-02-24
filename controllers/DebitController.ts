@@ -1,11 +1,11 @@
+import { generateTransactionId } from "../Utils/Helper";
 import { successResponseHandler } from "../Utils/ResponseHandler";
 import { NextFunction, Request, Response } from "express";
 const catchAsync = require("../Utils/catchAsync");
 const Debit = require("../models/Debit.ts");
-const APIFeatures = require("../Utils/APIFeatures")
+const APIFeatures = require("../Utils/APIFeatures");
 
-
-export const getAllDebits = catchAsync(async (req: Request) => {
+export const getAllDebits = catchAsync(async (req: Request, res: Response) => {
   const Features = new APIFeatures(Debit.find(), req.query)
     .sort()
     .fields()
@@ -14,11 +14,12 @@ export const getAllDebits = catchAsync(async (req: Request) => {
 
   const credit = await Features.query;
 
-  successResponseHandler(
-    200,
-    "Debit transactions retrieved successfully",
-    credit
-  );
+  res.json({
+    message: "Debit transactions retrieved successfully",
+    data: {
+      credit,
+    },
+  });
 });
 
 export const getOneDebit = catchAsync(
@@ -29,24 +30,36 @@ export const getOneDebit = catchAsync(
       return next(new AppError("Debit transaction not found", 404));
     }
 
-    successResponseHandler(
-      200,
-      "Debit transaction retrieved successfully",
-      credit
-    );
+    res.json({
+      message: "Debit transaction retrieved successfully",
+      data: {
+        credit,
+      },
+    });
   }
 );
 
-export const createCreditTransaction = catchAsync(async (req: Request) => {
-  const debitTransaction = await Debit.create({
-    user: req.body.user,
-    amount: req.body.amount,
-    transactionID: req.body.transactionID,
-  });
+export const createDebitTransaction = catchAsync(
+  async (req: Request | any, res: Response) => {
+    const debitTransaction = await Debit.create({
+      user: req.user._id,
+      toUser: req.body.toUser,
+      amount: req.body.amount,
+      transactionID: generateTransactionId(),
+    });
 
-  successResponseHandler(
-    200,
-    "Debit transactions created successfully",
-    debitTransaction
-  );
-});
+    await Credit.create({
+      user: debitTransaction.user,
+      toUser: debitTransaction.toUser,
+      amount: debitTransaction.amount,
+      transactionID: generateTransactionId(),
+    });
+
+    res.status(201).json({
+      message: "Debit transactions created successfully",
+      data: {
+        debitTransaction,
+      },
+    });
+  }
+);

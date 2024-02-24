@@ -2,9 +2,10 @@ import { successResponseHandler } from "../Utils/ResponseHandler";
 import { NextFunction, Request, Response } from "express";
 const catchAsync = require("../Utils/catchAsync");
 const Credit = require("../models/Credit.ts");
-const APIFeatures = require("../Utils/APIFeatures")
+const APIFeatures = require("../Utils/APIFeatures");
 
-export const getAllCredits = catchAsync(async (req: Request) => {
+export const getAllCredits = catchAsync(async (req: Request, res: Response) => {
+  console.log(req);
   const Features = new APIFeatures(Credit.find(), req.query)
     .sort()
     .fields()
@@ -13,11 +14,12 @@ export const getAllCredits = catchAsync(async (req: Request) => {
 
   const credit = await Features.query;
 
-  successResponseHandler(
-    200,
-    "Credit transactions retrieved successfully",
-    credit
-  );
+  res.json({
+    message: "Credit transactions retrieved successfully",
+    data: {
+      credit,
+    },
+  });
 });
 
 export const getOneCredit = catchAsync(
@@ -28,24 +30,28 @@ export const getOneCredit = catchAsync(
       return next(new AppError("Credit transaction not found", 404));
     }
 
-    successResponseHandler(
-      200,
-      "Credit transaction retrieved successfully",
-      credit
-    );
+    res.json({
+      message: "Credit transaction retrieved successfully",
+      data: {
+        credit,
+      },
+    });
   }
 );
 
-export const createCreditTransaction = catchAsync(async (req: Request) => {
-  const creditTransaction = await Credit.create({
-    user: req.body.user,
-    amount: req.body.amount,
-    transactionID: req.body.transactionID,
-  });
+export const createCreditTransaction = catchAsync(
+  async (req: Request, res: Response) => {
+    const creditTransaction = await Credit.create({
+      user: req.body.user,
+      amount: req.body.amount,
+      transactionID: req.body.transactionID,
+    });
 
-  successResponseHandler(
-    200,
-    "Credit transactions created successfully",
-    creditTransaction
-  );
-});
+    res.json({
+      message: "Credit transaction retrieved successfully",
+      data: {
+        creditTransaction,
+      },
+    });
+  }
+);

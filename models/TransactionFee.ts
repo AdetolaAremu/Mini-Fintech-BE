@@ -1,7 +1,7 @@
 import mongoose, { Model } from "mongoose";
 import { ITransactionFeeInterface } from "../types/TransactionFeeType";
 
-const tFeeSchema = new mongoose.Schema<ITransactionFeeInterface>(
+const transactionFees = new mongoose.Schema<ITransactionFeeInterface>(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +22,7 @@ const tFeeSchema = new mongoose.Schema<ITransactionFeeInterface>(
   }
 );
 
-const tFee: Model<ITransactionFeeInterface> =
-  mongoose.model<ITransactionFeeInterface>("tFeeSchema", tFeeSchema);
+const transactionFee: Model<ITransactionFeeInterface> =
+  mongoose.model<ITransactionFeeInterface>("transactionFees", transactionFees);
 
-module.exports = tFee;
+module.exports = transactionFee;

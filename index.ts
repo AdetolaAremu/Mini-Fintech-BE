@@ -9,7 +9,7 @@ const creditRouter = require("./routes/CreditRoute");
 
 const app: Application = express();
 
-const AppError = require("./utils/AppError");
+const AppError = require("./Utils/AppError");
 const globalErrorHandler = require("./controllers/globalErrorHandler");
 
 app.use(helmet());

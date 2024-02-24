@@ -1,9 +1,10 @@
-import { successResponseHandler } from "../Utils/ResponseHandler";
+import { generateTransactionId } from "../Utils/Helper";
 import { NextFunction, Request, Response } from "express";
 import { promisify } from "util";
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
 const User = require("../models/User");
+const Credit = require("../models/Credit");
 const AppError = require("../utils/AppError");
 
 const jwtSignedToken = (id: string) => {
@@ -12,7 +13,7 @@ const jwtSignedToken = (id: string) => {
   });
 };
 
-export const registerUser = catchAsync(async (req: Request) => {
+export const registerUser = catchAsync(async (req: Request, res: Response) => {
   const registeredUser = await User.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -22,7 +23,19 @@ export const registerUser = catchAsync(async (req: Request) => {
     confirmPassword: req.body.confirmPassword,
   });
 
-  successResponseHandler(201, "Registration successfull", registeredUser);
+  // create a credit of 1000
+  Credit.create({
+    user: registeredUser._id,
+    amount: 1000,
+    transactionID: generateTransactionId(),
+  });
+
+  res.status(201).json({
+    message: "Registration successfull",
+    data: {
+      registeredUser,
+    },
+  });
 });
 
 export const loginUser = catchAsync(

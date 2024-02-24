@@ -10,3 +10,7 @@ export const filterObj = <T extends Record<string, unknown>>(
   });
   return newObj;
 };
+
+export const generateTransactionId = () => {
+  return Math.random().toString(36).substr(2, 9);
+};

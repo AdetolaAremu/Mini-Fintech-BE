@@ -9,7 +9,7 @@ interface FieldsError extends Error {
   code: number;
 }
 
-const appErrror = require("../utils/AppError");
+const appErrror = require("../Utils/AppError");
 
 const handleCastErrorDB = (err: CastError) => {
   const message = `Invalid ${err.path}: ${err.value}`;
