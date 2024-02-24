@@ -1,4 +1,5 @@
-import express, { Application } from "express";
+import { Application } from "express";
+const express = require("express");
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
