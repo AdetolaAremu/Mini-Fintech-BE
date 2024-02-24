@@ -1,16 +1,17 @@
 // import { Application } from "express";
 const express = require("express");
-const { Application } = require("express");
+const { Application, Request, Response, NextFunction } = require("express");
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
-import { Application } from "express";
+import { NextFunction } from "express";
+// import { Application } from "express";
 const authRouter = require("./routes/AuthRoute");
 const debitRouter = require("./routes/DebitRoute");
 const creditRouter = require("./routes/CreditRoute");
 
-const app: Application = express();
+const app: typeof Application = express();
 
 const AppError = require("./Utils/AppError");
 const globalErrorHandler = require("./controllers/globalErrorHandler");
@@ -40,9 +41,12 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/credits", creditRouter);
 app.use("/api/v1/debits", debitRouter);
 
-app.use("*", (req, res, next) => {
-  next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
-});
+app.use(
+  "*",
+  (req: Request | any, res: Response | any, next: NextFunction | any) => {
+    next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
+  }
+);
 
 // global error handler for every request
 app.use(globalErrorHandler);
