@@ -5,7 +5,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
-import { NextFunction } from "express";
+// import { NextFunction } from "express";
 // import { Application } from "express";
 const authRouter = require("./routes/AuthRoute");
 const debitRouter = require("./routes/DebitRoute");
@@ -43,7 +43,11 @@ app.use("/api/v1/debits", debitRouter);
 
 app.use(
   "*",
-  (req: Request | any, res: Response | any, next: NextFunction | any) => {
+  (
+    req: typeof Request | any,
+    res: typeof Response | any,
+    next: typeof NextFunction | any
+  ) => {
     next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
   }
 );
