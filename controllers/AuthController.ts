@@ -2,10 +2,10 @@ import { generateTransactionId } from "../Utils/Helper";
 import { NextFunction, Request, Response } from "express";
 import { promisify } from "util";
 const jwt = require("jsonwebtoken");
-const catchAsync = require("../utils/catchAsync");
+const catchAsync = require("../Utils/catchAsync");
 const User = require("../models/User");
 const Credit = require("../models/Credit");
-const AppError = require("../utils/AppError");
+const AppError = require("../Utils/AppError");
 
 const jwtSignedToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
