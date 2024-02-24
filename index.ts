@@ -1,10 +1,10 @@
 // import { Application } from "express";
-const express = require("express");
-const { Application, Request, Response, NextFunction } = require("express");
-import rateLimit from "express-rate-limit";
-import helmet from "helmet";
-import mongoSanitize from "express-mongo-sanitize";
-import xss from "xss-clean";
+const appExpress = require("express");
+const { Application } = require("express");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+// import xss from "xss-clean";
 // import { NextFunction } from "express";
 // import { Application } from "express";
 const authRouter = require("./routes/AuthRoute");
@@ -13,7 +13,7 @@ const creditRouter = require("./routes/CreditRoute");
 
 const app: typeof Application = express();
 
-const AppError = require("./Utils/AppError");
+const ApplicationError = require("./Utils/AppError");
 const globalErrorHandler = require("./controllers/globalErrorHandler");
 
 app.use(helmet());
@@ -25,9 +25,8 @@ const limit = rateLimit({
 });
 
 app.use("/api", limit);
-app.use(express.json({ limit: "10kb" }));
+app.use(appExpress.json({ limit: "10kb" }));
 app.use(mongoSanitize());
-app.use(xss());
 
 // serving static files
 app.use(express.static(`${__dirname}/public`));
@@ -41,16 +40,11 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/credits", creditRouter);
 app.use("/api/v1/debits", debitRouter);
 
-app.use(
-  "*",
-  (
-    req: typeof Request | any,
-    res: typeof Response | any,
-    next: typeof NextFunction | any
-  ) => {
-    next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
-  }
-);
+app.use("*", (req: any, res: any, next: any) => {
+  next(
+    new ApplicationError(`Cannot find ${req.originalUrl} on this server`, 404)
+  );
+});
 
 // global error handler for every request
 app.use(globalErrorHandler);
