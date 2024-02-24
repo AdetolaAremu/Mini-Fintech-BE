@@ -1,11 +1,7 @@
-// import { Application } from "express";
 const appExpress = require("express");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
-// import xss from "xss-clean";
-// import { NextFunction } from "express";
-// import { Application } from "express";
 const authRouter = require("./routes/AuthRoute");
 const debitRouter = require("./routes/DebitRoute");
 const creditRouter = require("./routes/CreditRoute");
