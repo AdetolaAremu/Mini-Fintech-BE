@@ -4,6 +4,7 @@ const catchAsync = require("../Utils/CatchAsync");
 const Debit = require("../models/Debit.ts");
 const Credit = require("../models/Credit.ts");
 const APIFeatures = require("../Utils/APIFeatures");
+const CreditController = require("../controllers/CreditController");
 
 export const getAllDebits = catchAsync(
   async (req: Request | any, res: Response) => {
@@ -44,7 +45,12 @@ export const getOneDebit = catchAsync(
 );
 
 export const createDebitTransaction = catchAsync(
-  async (req: Request | any, res: Response) => {
+  async (req: Request | any, res: Response, next: NextFunction) => {
+    const balance = await CreditController.getTotal(req.user._id);
+
+    if (balance === 0)
+      return next(new AppError("You do not have sufficient balance", 404));
+
     const debitTransaction = await Debit.create({
       user: req.user._id,
       toUser: req.body.toUser,

@@ -29,19 +29,7 @@ export const getUserBalance = catchAsync(
   async (req: Request | any, res: Response) => {
     const userId = req.user._id;
 
-    const debitTotal = await Debit.aggregate([
-      { $match: { user: userId } },
-      { $group: { _id: null, total: { $sum: "$amount" } } },
-    ]);
-
-    const creditTotal = await Credit.aggregate([
-      { $match: { user: userId } },
-      { $group: { _id: null, total: { $sum: "$amount" } } },
-    ]);
-    console.log("debit", debitTotal);
-    console.log("credit", creditTotal);
-
-    const balance = (creditTotal[0]?.total || 0) - (debitTotal[0]?.total || 0);
+    const balance = await getTotal(userId);
 
     res.json({
       message: "Balance retrieved succcessfully",
@@ -85,3 +73,17 @@ export const createCreditTransaction = catchAsync(
     });
   }
 );
+
+export const getTotal = async (userId: string) => {
+  const debitTotal = await Debit.aggregate([
+    { $match: { user: userId } },
+    { $group: { _id: null, total: { $sum: "$amount" } } },
+  ]);
+
+  const creditTotal = await Credit.aggregate([
+    { $match: { user: userId } },
+    { $group: { _id: null, total: { $sum: "$amount" } } },
+  ]);
+
+  return (creditTotal[0]?.total || 0) - (debitTotal[0]?.total || 0);
+};
