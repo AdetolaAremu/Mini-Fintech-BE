@@ -27,16 +27,6 @@ const debitSchema = new mongoose.Schema<IDebitInterface>(
   }
 );
 
-// debitSchema.pre<IDebitInterface>("save", async function (next) {
-//   await Debit.create({
-//     user: this.user,
-//     amount: 10,
-//     transactionID: this.transactionID,
-//   });
-
-//   next();
-// });
-
 const Debit: Model<IDebitInterface> = mongoose.model<IDebitInterface>(
   "Debit",
   debitSchema

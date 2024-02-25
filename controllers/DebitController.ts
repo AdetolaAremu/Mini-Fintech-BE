@@ -9,7 +9,7 @@ export const getAllDebits = catchAsync(
   async (req: Request | any, res: Response) => {
     let filter = { user: req.user._id };
 
-    const Features = new APIFeatures(Debit.find({ filter }), req.query)
+    const Features = new APIFeatures(Debit.find(filter), req.query)
       .sort()
       .fields()
       .filter()
