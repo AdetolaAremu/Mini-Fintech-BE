@@ -6,6 +6,7 @@ import xss from "xss-clean";
 const authRouter = require("./routes/AuthRoute");
 const debitRouter = require("./routes/DebitRoute");
 const creditRouter = require("./routes/CreditRoute");
+const userRouter = require("./routes/UserRoute");
 const cors = require("cors");
 
 const app: Application = express();
@@ -38,6 +39,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/credits", creditRouter);
 app.use("/api/v1/debits", debitRouter);
+app.use("/api/v1/users", userRouter);
 
 app.use("*", (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
