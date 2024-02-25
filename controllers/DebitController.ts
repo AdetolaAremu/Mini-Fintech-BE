@@ -54,12 +54,7 @@ export const createDebitTransaction = catchAsync(
 
     await createDebitFeeTransaction(debitTransaction.user);
 
-    await Credit.create({
-      user: debitTransaction.user,
-      toUser: debitTransaction.toUser,
-      amount: debitTransaction.amount,
-      transactionID: generateTransactionId(),
-    });
+    await createCreditTransaction(req);
 
     res.status(201).json({
       message: "Debit transactions created successfully",
@@ -74,6 +69,14 @@ async function createDebitFeeTransaction(userId: string) {
   return await Debit.create({
     user: userId,
     amount: 10,
+    transactionID: generateTransactionId(),
+  });
+}
+
+async function createCreditTransaction(req: Request | any) {
+  return Credit.create({
+    user: req.body.toUser,
+    amount: req.body.amount,
     transactionID: generateTransactionId(),
   });
 }

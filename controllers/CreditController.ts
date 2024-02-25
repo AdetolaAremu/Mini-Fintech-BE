@@ -38,6 +38,8 @@ export const getUserBalance = catchAsync(
       { $match: { user: userId } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
+    console.log("debit", debitTotal);
+    console.log("credit", creditTotal);
 
     const balance = (creditTotal[0]?.total || 0) - (debitTotal[0]?.total || 0);
 
